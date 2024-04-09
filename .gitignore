@@ -17,3 +17,7 @@ composer.lock
 *.njsproj
 *.sln
 *.sw?
+
+# testing
+test
+test*.php

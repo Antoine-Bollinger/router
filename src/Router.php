@@ -31,12 +31,14 @@ abstract class Router implements Initializer\Router
      * Obtains the requested route from the provided URI.
      *
      * @param string $uri The URI string
+     * @param string $subdir The subdirectory containing the app and that should be deleted from the URI
      * @return string The sanitized requested route
      */
     protected function getRequestedRoute(
-        $uri = ""
+        $uri = "",
+        $subdir = ""
     ) :string {
-        return str_replace(APP_SUBDIR, "", ($uri !== "/" && substr($uri, -1) === "/") ? rtrim($uri) : $uri);
+        return str_replace($subdir, "", ($uri !== "/" && substr($uri, -1) === "/") ? rtrim($uri) : $uri);
     }
     
     /**
