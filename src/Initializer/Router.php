@@ -1,5 +1,5 @@
 <?php
-namespace Abollinger\Abstract\Initializer;
+namespace Abollinger\Initializer;
 
 /**
  * Interface Router
