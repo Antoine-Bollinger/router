@@ -1,0 +1,20 @@
+{
+    "name": "abollinger/router",
+    "description": "A lightweight router for every PHP app.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Abollinger\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Antoine Bollinger",
+            "email": "antoine.bollinger@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/yaml": "^7.0"
+    }
+}
