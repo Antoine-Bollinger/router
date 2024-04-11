@@ -12,20 +12,14 @@ use \Symfony\Component\Yaml\Yaml;
  */
 abstract class Router implements Initializer\Router
 {
-    /**
-     * @var string $requestedRoute The requested route obtained from the URL
-     */
-    protected $requestedRoute;
+    /** @var string $requestedRoute The requested route obtained from the URL */
+    protected string $requestedRoute;
 
-    /**
-     * @var array $routes Collection of routes defined for the application
-     */
-    protected $routes;
+    /** @var array $routes Collection of routes defined for the application */
+    protected array $routes;
 
-    /**
-     * @var array $route Information about the current matched route
-     */
-    protected $route;
+    /** @var array $route Information about the current matched route */
+    protected array $route;
 
     /**
      * Obtains the requested route from the provided URI.
@@ -35,8 +29,8 @@ abstract class Router implements Initializer\Router
      * @return string The sanitized requested route
      */
     protected function getRequestedRoute(
-        $uri = "",
-        $subdir = ""
+        string $uri = "",
+        string $subdir = ""
     ) :string {
         return str_replace($subdir, "", ($uri !== "/" && substr($uri, -1) === "/") ? rtrim($uri) : $uri);
     }
@@ -49,8 +43,8 @@ abstract class Router implements Initializer\Router
      * @return array Information about the matching route, if found
      */
     protected function findMatchingRoute(
-        $routes = [],
-        $route = ""
+        array $routes = [],
+        string $route = ""
     ) :array {
         try {
             if (!is_array($routes)) return [];
@@ -83,8 +77,8 @@ abstract class Router implements Initializer\Router
      * @param string $dir   The directory containing YAML route files
      * @return array        An array of parsed routes from YAML files
      */
-    public function getRoutesFromYaml(
-        $dir = ""
+    protected function getRoutesFromYaml(
+        string $dir = ""
     ) :array {
         try {
             $routes = [];
@@ -109,10 +103,11 @@ abstract class Router implements Initializer\Router
      * Retrieves routes from PHP controller files within the specified directory.
      *
      * @param string $directory     The directory path containing PHP controller files.
-    * @return array                 An array containing extracted routes with their path, name, and controller information.
+     * @param string $namspace      The main namespace containing the controller classes.
+     * @return array                An array containing extracted routes with their path, name, and controller information.
      */
-    public function getRoutesFromDirectory(
-        $directory,
+    protected function getRoutesFromDirectory(
+        string $directory,
         $namespace
     ) {
         try {
@@ -154,7 +149,7 @@ abstract class Router implements Initializer\Router
      * @return array|null An array with the extracted path and name if found, otherwise null.
      */
     private function parseRouteAnnotation(
-        $docComment
+        string $docComment
     ) {
         $pattern = '/@Route\("(.*?)"[^)]*name="(.*?)"(?:[^)]*auth=(true|false))?/';
     
