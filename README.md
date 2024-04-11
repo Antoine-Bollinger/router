@@ -16,6 +16,22 @@ composer require abollinger/router
 
 Here a the functions provided:
 
+<details open="open">
+    <summary>Functions in the Classes tree</summary>
+    <ul>
+        <li>Abollinger/
+            <ul>
+                <li>Router::
+                    <ul>
+                        <li><a href="#getRoutesFromYaml">getRoutesFromYaml($dir)</a></li>
+                        <li><a href="#getRoutesFromDirectory">getRoutesFromDirectory($dir)</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>    
+</details>
+
 ### getRoutesFromYaml
 
 Retrieves routes from YAML files present in the specified directory.
