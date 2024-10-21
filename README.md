@@ -2,6 +2,10 @@
 
 This router is used in the partez framework (see on **[Packagist](https://packagist.org/packages/abollinger/partez)**). It provides a set of functions to help you create a smart router for you web app or API.
 
+[![Total Downloads](https://img.shields.io/packagist/dt/abollinger/router)](https://packagist.org/packages/abollinger/router)
+[![Latest Stable Version](https://img.shields.io/packagist/v/abollinger/router)](https://packagist.org/packages/abollinger/router)
+[![License](https://img.shields.io/packagist/l/abollinger/router)](https://packagist.org/packages/abollinger/router)
+
 ## Getting started
 
 ### Installation
