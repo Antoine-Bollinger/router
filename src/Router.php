@@ -117,7 +117,7 @@ abstract class Router implements Initializer\Router
      */
     protected function getRoutesFromDirectory(
         string $directory,
-        $namespace
+        string $namespace
     ) {
         try {
             $routes = [];
@@ -125,7 +125,7 @@ abstract class Router implements Initializer\Router
             foreach ($controllerFiles as $file) {
                 require_once $file; 
                 $className = basename($file, ".php");
-                $fullClassName = $namespace . "\\Controller\\" . $className;
+                $fullClassName = $namespace . $className;
                 if (class_exists($fullClassName)) {
                     $reflectionClass = new \ReflectionClass($fullClassName);
                     foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
