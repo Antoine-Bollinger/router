@@ -6,6 +6,7 @@ This router is used in the partez framework (see on **[Packagist](https://packag
 [![Latest Stable Version](https://img.shields.io/packagist/v/abollinger/router)](https://packagist.org/packages/abollinger/router)
 [![License](https://img.shields.io/packagist/l/abollinger/router)](https://packagist.org/packages/abollinger/router)
 
+
 ## Getting started
 
 ### Installation
@@ -15,6 +16,7 @@ You can install the router in your project using composer:
 ```bash
 composer require abollinger/router
 ```
+
 
 ## Usage 
 
@@ -48,6 +50,7 @@ Retrieves routes from PHP controller files within the specified directory.
 * ```@param string $directory```: The directory path containing PHP controller files.
 * ```@return array```: An array containing extracted routes with their path, name, and controller information.
 
+
 ## Classes tree
 
 ```bash
@@ -57,3 +60,15 @@ Abollinger/
     └── getRoutesFromDirectory($dir)
 ```
 
+
+## Licence 
+
+This library is licensed under the MIT License. For full license details, see the `LICENCE` file distributed with this source code.
+
+
+## Author
+
+Antoine Bollinger
+Email: abollinger@partez.net
+
+For contributions, issues, or feedback, feel free to contact the author or open a GitHub issue.

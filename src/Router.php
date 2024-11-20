@@ -2,7 +2,7 @@
 /*
  * This file is part of the Abollinger\Router package.
  *
- * (c) Antoine Bollinger <antoine.bollinger@gmail.com>
+ * (c) Antoine Bollinger <abollinger@partez.net>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -35,6 +35,7 @@ abstract class Router implements Initializer\Router
      *
      * @param string $uri The URI string
      * @param string $subdir The subdirectory containing the app and that should be deleted from the URI
+     * 
      * @return string The sanitized requested route
      */
     protected function getRequestedRoute(
@@ -49,6 +50,7 @@ abstract class Router implements Initializer\Router
      *
      * @param array $routes Collection of routes to search within
      * @param string $route The route string to match
+     * 
      * @return array Information about the matching route, if found
      */
     protected function findMatchingRoute(
@@ -84,6 +86,7 @@ abstract class Router implements Initializer\Router
      * Retrieves routes from YAML files present in the specified directory.
      *
      * @param string $dir   The directory containing YAML route files
+     * 
      * @return array        An array of parsed routes from YAML files
      */
     protected function getRoutesFromYaml(
@@ -113,12 +116,13 @@ abstract class Router implements Initializer\Router
      *
      * @param string $directory     The directory path containing PHP controller files.
      * @param string $namspace      The main namespace containing the controller classes.
+     * 
      * @return array                An array containing extracted routes with their path, name, and controller information.
      */
     protected function getRoutesFromDirectory(
         string $directory,
         string $namespace
-    ) {
+    ) :array {
         try {
             $routes = [];
             $controllerFiles = glob($directory . "/*.php");
@@ -159,7 +163,7 @@ abstract class Router implements Initializer\Router
      */
     private function parseRouteAnnotation(
         string $docComment
-    ) {
+    ) :array|null {
         $pattern = '/@Route\("(.*?)"[^)]*name="(.*?)"(?:[^)]*auth=(true|false))?/';
     
         preg_match($pattern, $docComment, $matches);
