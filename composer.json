@@ -11,11 +11,11 @@
     "authors": [
         {
             "name": "Antoine Bollinger",
-            "email": "antoine.bollinger@gmail.com"
+            "email": "abollinger@partez.net"
         }
     ],
     "require": {
         "symfony/yaml": "^7.0"
     },
-    "version": "v1.0.9"
+    "version": "v1.1.0"
 }
