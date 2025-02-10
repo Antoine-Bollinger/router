@@ -150,7 +150,7 @@ abstract class Router implements Initializer\Router
                                             "name" => $route["name"],
                                             "auth" => $route["auth"],
                                             "controller" => $fullClassName,
-                                            "method" => $reflectionMethod
+                                            "method" => $reflectionMethod->getName()
                                         ];
                                     }
                                 }
