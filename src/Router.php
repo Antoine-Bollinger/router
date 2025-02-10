@@ -115,45 +115,103 @@ abstract class Router implements Initializer\Router
      * Retrieves routes from PHP controller files within the specified directory.
      *
      * @param string $directory     The directory path containing PHP controller files.
-     * @param string $namspace      The main namespace containing the controller classes.
      * 
      * @return array                An array containing extracted routes with their path, name, and controller information.
      */
     protected function getRoutesFromDirectory(
-        string $directory,
-        string $namespace
+        string $directory
     ) :array {
         try {
             $routes = [];
-            $controllerFiles = glob($directory . "/*.php");
-            foreach ($controllerFiles as $file) {
-                require_once $file; 
-                $className = basename($file, ".php");
-                $fullClassName = $namespace . $className;
-                if (class_exists($fullClassName)) {
-                    $reflectionClass = new \ReflectionClass($fullClassName);
-                    foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-                        $docComment = $method->getDocComment();
-                        if (strpos($docComment, "@Route") !== false) {
-                            $route = $this->parseRouteAnnotation($docComment);
-                            if ($route !== null) {
-                                $routes[] = [
-                                    "path" => $route["path"],
-                                    "name" => $route["name"],
-                                    "auth" => $route["auth"],
-                                    "controller" => $fullClassName,
-                                ];
+            $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
+        
+            foreach ($iterator as $file) {
+                if ($file->isFile() && $file->getExtension() === "php") {
+                    $filePath = $file->getPathname();
+                    $namespace = $this->getNamespaceFromFile($filePath);
+                    $className = $this->getClassNameFromFile($filePath);
+    
+                    if ($className) {
+                        $fullClassName = $namespace ? $namespace . "\\" . $className : $className;
+    
+                        if (class_exists($fullClassName)) {
+                            $reflectionClass = new \ReflectionClass($fullClassName);
+    
+                            if ($reflectionClass->hasMethod("init")) {
+                                $reflectionMethod = $reflectionClass->getMethod("init");
+                                $docComment = $reflectionMethod->getDocComment();
+    
+                                if ($docComment && strpos($docComment, "@Route") !== false) {
+                                    $route = $this->parseRouteAnnotation($docComment);
+    
+                                    if ($route !== null) {
+                                        $routes[] = [
+                                            "path" => $route["path"],
+                                            "name" => $route["name"],
+                                            "auth" => $route["auth"],
+                                            "controller" => $fullClassName
+                                        ];
+                                    }
+                                }
                             }
+    
                         }
                     }
                 }
             }
+        
             return $routes;
         } catch(\Exception $e) {
             return [];
         }
     }
     
+    /**
+     * Extracts the namespace from a PHP file.
+     *
+     * @param string $filePath The file path.
+     * 
+     * @return string|null The extracted namespace, or null if not found.
+     */
+    private function getNamespaceFromFile(string $filePath): ?string
+    {
+        $namespace = null;
+        $handle = fopen($filePath, "r");
+        
+        while (($line = fgets($handle)) !== false) {
+            if (preg_match('/^namespace\s+(.+);$/', trim($line), $matches)) {
+                $namespace = trim($matches[1]);
+                break;
+            }
+        }
+    
+        fclose($handle);
+        return $namespace;
+    }
+
+    /**
+     * Extracts the class name from a PHP file.
+     *
+     * @param string $filePath The file path.
+     * 
+     * @return string|null The extracted class name, or null if not found.
+     */
+    private function getClassNameFromFile(string $filePath): ?string
+    {
+        $className = null;
+        $handle = fopen($filePath, "r");
+    
+        while (($line = fgets($handle)) !== false) {
+            if (preg_match('/^(final|abstract)?\s*class\s+(\w+)/', trim($line), $matches)) {
+                $className = trim($matches[2]);
+                break;
+            }
+        }
+    
+        fclose($handle);
+        return $className;
+    }
+
     /**
      * Parses the @Route annotation from a docblock comment.
      *
