@@ -136,9 +136,9 @@ abstract class Router implements Initializer\Router
     
                         if (class_exists($fullClassName)) {
                             $reflectionClass = new \ReflectionClass($fullClassName);
-    
-                            if ($reflectionClass->hasMethod("init")) {
-                                $reflectionMethod = $reflectionClass->getMethod("init");
+                            $reflectionMethods = $reflectionClass->getMethods();
+
+                            foreach ($reflectionMethods as $reflectionMethod) {
                                 $docComment = $reflectionMethod->getDocComment();
     
                                 if ($docComment && strpos($docComment, "@Route") !== false) {
@@ -149,12 +149,12 @@ abstract class Router implements Initializer\Router
                                             "path" => $route["path"],
                                             "name" => $route["name"],
                                             "auth" => $route["auth"],
-                                            "controller" => $fullClassName
+                                            "controller" => $fullClassName,
+                                            "method" => $reflectionMethod
                                         ];
                                     }
                                 }
-                            }
-    
+                            }    
                         }
                     }
                 }
