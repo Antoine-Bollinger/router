@@ -229,7 +229,7 @@ abstract class Router implements Initializer\Router
         if (count($matches) >= 3) {
             $path = $matches[1];
             $name = $matches[2];
-            $auth = isset($matches[3]) ? ($matches[3] === 'true') : false;
+            $auth = isset($matches[3]) ? ($matches[3] === 'true') : (boolean)($_ENV["APP_AUTH"] ?? false);
     
             return [
                 'path' => $path,
