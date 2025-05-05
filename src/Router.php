@@ -222,7 +222,8 @@ abstract class Router implements Initializer\Router
     private function parseRouteAnnotation(
         string $docComment
     ) :array|null {
-        $pattern = '/@Route\("(.*?)"[^)]*name="(.*?)"(?:[^)]*auth=(true|false))?/';
+        $pattern = '/@Route\("([^"]+)"[^)]*name="([^"]+)"(?:[^)]*auth=(true|false))?(?:[^)]*admin=(true|false))?/';
+        // $pattern = '/@Route\("(.*?)"[^)]*name="(.*?)"(?:[^)]*auth=(true|false))?/';
     
         preg_match($pattern, $docComment, $matches);
     
@@ -230,11 +231,13 @@ abstract class Router implements Initializer\Router
             $path = $matches[1];
             $name = $matches[2];
             $auth = isset($matches[3]) ? ($matches[3] === 'true') : (boolean)($_ENV["APP_AUTH"] ?? false);
+            $admin = isset($matches[4]) ? ($matches[4] === 'true') : false;
     
             return [
                 'path' => $path,
                 'name' => $name,
                 'auth' => $auth,
+                'admin' => $admin
             ];
         }
         return null;
