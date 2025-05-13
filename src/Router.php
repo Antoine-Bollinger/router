@@ -150,6 +150,7 @@ abstract class Router implements Initializer\Router
                                             "name" => $route["name"],
                                             "auth" => $route["auth"],
                                             "admin" => $route["admin"],
+                                            "verb" => $route["verb"],
                                             "controller" => $fullClassName,
                                             "method" => $reflectionMethod->getName()
                                         ];
@@ -250,7 +251,8 @@ abstract class Router implements Initializer\Router
         // Apply fallbacks
         $params['auth'] = $params['auth'] ?? (bool)($_ENV['APP_AUTH'] ?? false);
         $params['admin'] = $params['admin'] ?? false;
-
+        $params['verb'] = isset($params['verb']) ? strtolower($params['verb']) : 'get';
+        
         return $params;
     }
 
