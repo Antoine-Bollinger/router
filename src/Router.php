@@ -225,27 +225,33 @@ abstract class Router implements Initializer\Router
     private function parseRouteAnnotation(
         string $docComment
     ) :array|null {
-        $pattern = '/@Route\(\s*path="(?<path>[^"]+)",\s*name="(?<name>[^"]+)"(?:,\s*auth=(?<auth>true|false))?(?:,\s*admin=(?<admin>true|false))?\s*\)/';
-
-        preg_match($pattern, $docComment, $matches);
-
-        if (!isset($matches['path'], $matches['name'])) {
+        // Match the full @Route(...) string
+        if (!preg_match('/@Route\((.*?)\)/', $docComment, $routeMatch)) {
             return null;
         }
 
-        $auth = array_key_exists('auth', $matches)
-            ? ($matches['auth'] === 'true')
-            : (bool)($_ENV["APP_AUTH"] ?? false);
+        $paramsString = $routeMatch[1];
+        $params = [];
 
-        $admin = array_key_exists('admin', $matches)
-            ? ($matches['admin'] === 'true')
-            : false;
+        // Match key="value" or key=value (for booleans)
+        preg_match_all('/(\w+)=("([^"]+)"|(true|false))/', $paramsString, $matches, PREG_SET_ORDER);
 
-        return [
-            'path' => $matches['path'],
-            'name' => $matches['name'],
-            'auth' => $auth,
-            'admin' => $admin,
-        ];
+        foreach ($matches as $match) {
+            $key = $match[1];
+            $value = $match[3] !== '' ? $match[3] : $match[4]; // If string, use it; else it's a boolean
+            $params[$key] = ($value === 'true') ? true : (($value === 'false') ? false : $value);
+        }
+
+        // Ensure required values exist
+        if (!isset($params['path'], $params['name'])) {
+            return null;
+        }
+
+        // Apply fallbacks
+        $params['auth'] = $params['auth'] ?? (bool)($_ENV['APP_AUTH'] ?? false);
+        $params['admin'] = $params['admin'] ?? false;
+
+        return $params;
     }
+
 }
