@@ -174,8 +174,9 @@ abstract class Router implements Initializer\Router
      * 
      * @return string|null The extracted namespace, or null if not found.
      */
-    private function getNamespaceFromFile(string $filePath): ?string
-    {
+    private function getNamespaceFromFile(
+        string $filePath
+    ): ?string {
         $namespace = null;
         $handle = fopen($filePath, "r");
         
@@ -197,8 +198,9 @@ abstract class Router implements Initializer\Router
      * 
      * @return string|null The extracted class name, or null if not found.
      */
-    private function getClassNameFromFile(string $filePath): ?string
-    {
+    private function getClassNameFromFile(
+        string $filePath
+    ): ?string {
         $className = null;
         $handle = fopen($filePath, "r");
     
@@ -223,7 +225,8 @@ abstract class Router implements Initializer\Router
     private function parseRouteAnnotation(
         string $docComment
     ) :array|null {
-        $pattern = '/@Route\("([^"]+)"[^)]*name="([^"]+)"(?:[^)]*auth=(true|false))?(?:[^)]*admin=(true|false))?/';
+        $pattern = '/@Route\("(?<path>[^"]+)"\s+name="(?<name>[^"]+)"(?:\s+auth=(?<auth>true|false))?(?:\s+admin=(?<admin>true|false))?/';
+        // $pattern = '/@Route\("([^"]+)"[^)]*name="([^"]+)"(?:[^)]*auth=(true|false))?(?:[^)]*admin=(true|false))?/';
         // $pattern = '/@Route\("(.*?)"[^)]*name="(.*?)"(?:[^)]*auth=(true|false))?/';
     
         preg_match($pattern, $docComment, $matches);

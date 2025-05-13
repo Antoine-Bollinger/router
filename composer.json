@@ -17,5 +17,5 @@
     "require": {
         "symfony/yaml": "^7.0"
     },
-    "version": "v1.2.5"
+    "version": "v1.2.6"
 }
