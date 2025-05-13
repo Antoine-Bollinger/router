@@ -225,25 +225,27 @@ abstract class Router implements Initializer\Router
     private function parseRouteAnnotation(
         string $docComment
     ) :array|null {
-        $pattern = '/@Route\("(?<path>[^"]+)"\s+name="(?<name>[^"]+)"(?:\s+auth=(?<auth>true|false))?(?:\s+admin=(?<admin>true|false))?/';
-        // $pattern = '/@Route\("([^"]+)"[^)]*name="([^"]+)"(?:[^)]*auth=(true|false))?(?:[^)]*admin=(true|false))?/';
-        // $pattern = '/@Route\("(.*?)"[^)]*name="(.*?)"(?:[^)]*auth=(true|false))?/';
-    
+        $pattern = '/@Route\(\s*path="(?<path>[^"]+)",\s*name="(?<name>[^"]+)"(?:,\s*auth=(?<auth>true|false))?(?:,\s*admin=(?<admin>true|false))?\s*\)/';
+
         preg_match($pattern, $docComment, $matches);
-    
-        if (count($matches) >= 3) {
-            $path = $matches[1];
-            $name = $matches[2];
-            $auth = isset($matches[3]) ? ($matches[3] === 'true') : (boolean)($_ENV["APP_AUTH"] ?? false);
-            $admin = isset($matches[4]) ? ($matches[4] === 'true') : false;
-    
-            return [
-                'path' => $path,
-                'name' => $name,
-                'auth' => $auth,
-                'admin' => $admin
-            ];
+
+        if (!isset($matches['path'], $matches['name'])) {
+            return null;
         }
-        return null;
+
+        $auth = array_key_exists('auth', $matches)
+            ? ($matches['auth'] === 'true')
+            : (bool)($_ENV["APP_AUTH"] ?? false);
+
+        $admin = array_key_exists('admin', $matches)
+            ? ($matches['admin'] === 'true')
+            : false;
+
+        return [
+            'path' => $matches['path'],
+            'name' => $matches['name'],
+            'auth' => $auth,
+            'admin' => $admin,
+        ];
     }
 }
