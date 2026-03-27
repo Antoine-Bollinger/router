@@ -55,11 +55,16 @@ abstract class Router implements Initializer\Router
      */
     protected function findMatchingRoute(
         array $routes = [],
-        string $route = ""
+        string $route = "",
+        string $verb = ""
     ) :array {
         try {
             if (!is_array($routes)) return [];
+            $verb = $verb === "" ? ($_SERVER["REQUEST_METHOD"] ?? "get") : $verb;
             foreach($routes as $routeConfig) {
+                if (strtoupper($routeConfig["verb"]) !== strtoupper($verb)) {
+                    continue;
+                }
                 $pattern = $routeConfig["path"];
                 $pattern = preg_replace_callback('/\{(\w+)\}/', function ($matches) {
                     return '(?<' . $matches[1] . '>[^\/]+)';
@@ -100,6 +105,8 @@ abstract class Router implements Initializer\Router
                     $tmp = Yaml::parseFile(implode("/", [$dir, $file]));
                     if (is_array($tmp)) {
                         foreach($tmp as $v) {
+                            if (!isset($v["verb"]))
+                                $v["verb"] = "get";
                             $routes[] = $v;
                         }
                     }
